@@ -291,14 +291,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|EN0_Pin|EN1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DOT_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
+                          |EN2_Pin|EN3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin|SEG3_Pin
                           |SEG4_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_RED_Pin EN0_Pin EN1_Pin */
-  GPIO_InitStruct.Pin = LED_RED_Pin|EN0_Pin|EN1_Pin;
+  /*Configure GPIO pins : DOT_Pin LED_RED_Pin EN0_Pin EN1_Pin
+                           EN2_Pin EN3_Pin */
+  GPIO_InitStruct.Pin = DOT_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
+                          |EN2_Pin|EN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -316,32 +319,65 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int counter = 50;
+// bien diem thoi gian sang 2 den led
+int counter_2_led = 50;
+//thoi gian sang cua 2 den led
+int time_blinking_2_led = 100;
+
+// bien dem thoi gian hien thi cua 1 led 7 doan
+int counter_7_led = 50;
+
+//thoi gian hien thị cua 1 den led 7 doan
 int switching_time = 50;
-// state = 0 tuc EN0 dang bat, state = 0 tuc EN1 dang bat;
-int state = 0;
+enum state{EN0,EN1,EN2,EN3};
+// current_state = EN0 tuc EN0 dang bat, state = EN1 tuc EN1 dang bat...vv
+enum state current_state = EN0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	counter--;
+	counter_7_led--;
+	counter_2_led--;
 	HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
-	if( counter <= 0){
-		counter = switching_time;
-		switch(state){
-		case 0:
-			HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
+	if( counter_7_led <= 0){
+		counter_7_led = switching_time;
+		//TODO
+		// chung ta se cho cac led 7 doan hien thi theo thu tu 0,1,2,3,0,....
+		//de lam vay thi ta se tat tin hieu dieu khien o trang thai truoc va bat trang thai dieu khien o trang thai hien tai
+		switch(current_state){
+		case EN0:
+			//disable EN3 tuc trang thai truoc do hien thị led 7 doan
+			HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
+			//enable EN0 tuc trang thai hien tai hien thị led 7 doan
 			HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,RESET);
 			display7SEG(1);
-			state = 1;
+			current_state = EN1;
 			break;
-		case 1:
+		case EN1:
 			HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
 			HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,RESET);
 			display7SEG(2);
-			state = 0;
+			current_state = EN2;
 			break;
-
+		case EN2:
+			HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
+			HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,RESET);
+			display7SEG(3);
+			current_state = EN3;
+			break;
+		case EN3:
+			HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
+			HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,RESET);
+			display7SEG(0);
+			current_state = EN0;
+			break;
 		default:
 			break;
 		}
+	}
+
+	if(counter_2_led <= 0){
+		counter_2_led = time_blinking_2_led;
+		//TODO
+		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+
 	}
 }
 /* USER CODE END 4 */
