@@ -1113,7 +1113,7 @@ void updateClockBuffer(int hour, int minute){
  80007fc:	605a      	str	r2, [r3, #4]
 	}
 
-	//tuong tu so vo update minute
+	//tuong tu voi update minute
 	if(minute < 10){
  80007fe:	683b      	ldr	r3, [r7, #0]
  8000800:	2b09      	cmp	r3, #9
@@ -1127,9 +1127,7 @@ void updateClockBuffer(int hour, int minute){
  800080c:	683b      	ldr	r3, [r7, #0]
  800080e:	60d3      	str	r3, [r2, #12]
 		}
-		// neu hour >10 thi ta lay so hang chuc luu vao buffer[0] va hang don vi luu vao buffer[1]
-		// vi du hour = 10 thi buffer[0] = 1, buffer[1] = 0;
-		if( minute >= 10 && minute < 60){
+	if( minute >= 10 && minute < 60){
  8000810:	683b      	ldr	r3, [r7, #0]
  8000812:	2b09      	cmp	r3, #9
  8000814:	dd19      	ble.n	800084a <updateClockBuffer+0xa2>
@@ -1159,7 +1157,7 @@ void updateClockBuffer(int hour, int minute){
  8000844:	1aca      	subs	r2, r1, r3
  8000846:	4b03      	ldr	r3, [pc, #12]	; (8000854 <updateClockBuffer+0xac>)
  8000848:	60da      	str	r2, [r3, #12]
-		}
+	}
 
 }
  800084a:	bf00      	nop

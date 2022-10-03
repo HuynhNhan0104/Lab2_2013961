@@ -404,17 +404,15 @@ void updateClockBuffer(int hour, int minute){
 		led_buffer[1] = hour%10;
 	}
 
-	//tuong tu so vo update minute
+	//tuong tu voi update minute
 	if(minute < 10){
 			led_buffer[2] = 0;
 			led_buffer[3] = minute;
 		}
-		// neu hour >10 thi ta lay so hang chuc luu vao buffer[0] va hang don vi luu vao buffer[1]
-		// vi du hour = 10 thi buffer[0] = 1, buffer[1] = 0;
-		if( minute >= 10 && minute < 60){
+	if( minute >= 10 && minute < 60){
 			led_buffer[2] = minute/10;
 			led_buffer[3] = minute%10;
-		}
+	}
 
 }
 
