@@ -56,9 +56,10 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 void display7SEG(int num);
 void update7SEG ( int index );
-
+void updateClockBuffer(int hour, int minute);
 
 /* USER CODE END 0 */
 
@@ -83,7 +84,6 @@ int main(void)
 
   /* Configure the system clock */
   SystemClock_Config();
-
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
@@ -97,11 +97,29 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+int hour = 7, minute = 30, second = 1;
+
   while (1)
   {
+	  second ++;
+	  if ( second >= 60) {
+		  second = 0;
+		  minute ++;
+	  }
+	  if( minute >= 60) {
+		  minute = 0;
+		  hour ++;
+	  }
+	  if( hour >=24){
+		  hour = 0;
+	  }
+
+	  updateClockBuffer (hour, minute);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  HAL_Delay (1000) ;
   }
   /* USER CODE END 3 */
 }
@@ -228,52 +246,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-const int MAX_LED = 4;
-int index_led = 0;
-int led_buffer [4] = {1, 7, 5, 6};
-void update7SEG ( int index ){
-	switch ( index ){
-	case 0:
-		// Display the first 7 SEG with led_buffer [0]
-		// chung ta chi cho phep duy nhat 1 cong ENi o trang thai enable, cac cong con lai se o trang thai disable
-		//trong truong hop nay chi co cong EN0 la enable
-		HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,RESET);
-		HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
-		HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
-		HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
-		display7SEG(led_buffer[0]);
-		break ;
-	case 1:
-		// Display the second 7 SEG with led_buffer [1]
-		//trong truong hop nay chi co cong EN1 la enable
-		HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
-		HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,RESET);
-		HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
-		HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
-		display7SEG(led_buffer[1]);
-		break ;
-	case 2:
-		// Display the third 7 SEG with led_buffer [2]
-		//trong truong hop nay chi co cong EN2 la enable
-		HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
-		HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
-		HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,RESET);
-		HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
-		display7SEG(led_buffer[2]);
-		break ;
-	case 3:
-		// Display the forth 7 SEG with led_buffer [3]
-		//trong truong hop nay chi co cong EN0 la enable
-		HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
-		HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
-		HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
-		HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,RESET);
-		display7SEG(led_buffer[3]);
-		break ;
-	default :
-		break ;
-	}
-}
 void display7SEG(int num){
   	switch(num){
   	case 0:
@@ -371,15 +343,91 @@ void display7SEG(int num){
   }
 
 
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer [4] = {2, 3, 5, 6};
+void update7SEG ( int index ){
+	switch ( index ){
+	case 0:
+		// Display the first 7 SEG with led_buffer [0]
+		// chung ta chi cho phep duy nhat 1 cong ENi o trang thai enable, cac cong con lai se o trang thai disable
+		//trong truong hop nay chi co cong EN0 la enable
+		HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,RESET);
+		HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
+		HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
+		HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
+		display7SEG(led_buffer[0]);
+		break ;
+	case 1:
+		// Display the second 7 SEG with led_buffer [1]
+		//trong truong hop nay chi co cong EN1 la enable
+		HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
+		HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,RESET);
+		HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
+		HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
+		display7SEG(led_buffer[1]);
+		break ;
+	case 2:
+		// Display the third 7 SEG with led_buffer [2]
+		//trong truong hop nay chi co cong EN2 la enable
+		HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
+		HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
+		HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,RESET);
+		HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
+		display7SEG(led_buffer[2]);
+		break ;
+	case 3:
+		// Display the forth 7 SEG with led_buffer [3]
+		//trong truong hop nay chi co cong EN0 la enable
+		HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
+		HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
+		HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
+		HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,RESET);
+		display7SEG(led_buffer[3]);
+		break ;
+	default :
+		break ;
+	}
+}
+
+void updateClockBuffer(int hour, int minute){
+	// neu hour < 10 thi ta se them so 0 o truoc
+	// vi du hour = 9 thi buffer[0] = 0, buffer[1] = 9;
+	if(hour < 10){
+		led_buffer[0] = 0;
+		led_buffer[1] = hour;
+	}
+	// neu hour >10 thi ta lay so hang chuc luu vao buffer[0] va hang don vi luu vao buffer[1]
+	// vi du hour = 10 thi buffer[0] = 1, buffer[1] = 0;
+	if( hour >= 10 && hour < 24){
+		led_buffer[0] = hour/10;
+		led_buffer[1] = hour%10;
+	}
+
+	//tuong tu so vo update minute
+	if(minute < 10){
+			led_buffer[2] = 0;
+			led_buffer[3] = minute;
+		}
+		// neu hour >10 thi ta lay so hang chuc luu vao buffer[0] va hang don vi luu vao buffer[1]
+		// vi du hour = 10 thi buffer[0] = 1, buffer[1] = 0;
+		if( minute >= 10 && minute < 60){
+			led_buffer[2] = minute/10;
+			led_buffer[3] = minute%10;
+		}
+
+}
+
+
 //thoi gian sang cua 2 den led
 int time_blinking_2_led_red = 100;
 // bien diem thoi gian sang 2 den led
 int counter_2_LED_RED = 100;
 
 //thoi gian hien thị cua 1 den led 7 doan
-int switching_time = 25;
+int switching_time = 10;
 // bien dem thoi gian hien thi cua 1 led 7 doan
-int counter_led_7_seg = 25;
+int counter_led_7_seg = 10;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){\
 	//den led nhap nhay moi 10ms
