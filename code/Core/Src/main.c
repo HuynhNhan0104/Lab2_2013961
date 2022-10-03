@@ -371,15 +371,15 @@ void display7SEG(int num){
   }
 
 
-// bien diem thoi gian sang 2 den led
-int counter_2_LED_RED = 100;
 //thoi gian sang cua 2 den led
 int time_blinking_2_led_red = 100;
+// bien diem thoi gian sang 2 den led
+int counter_2_LED_RED = 100;
 
-// bien dem thoi gian hien thi cua 1 led 7 doan
-int counter_led_7_seg = 50;
 //thoi gian hien thị cua 1 den led 7 doan
-int switching_time = 50;
+int switching_time = 25;
+// bien dem thoi gian hien thi cua 1 led 7 doan
+int counter_led_7_seg = 25;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){\
 	//den led nhap nhay moi 10ms

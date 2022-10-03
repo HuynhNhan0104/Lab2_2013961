@@ -995,10 +995,10 @@ void display7SEG(int num){
  8000754:	40010c00 	.word	0x40010c00
 
 08000758 <HAL_TIM_PeriodElapsedCallback>:
-// bien dem thoi gian hien thi cua 1 led 7 doan
-int counter_led_7_seg = 50;
 //thoi gian hien thị cua 1 den led 7 doan
-int switching_time = 50;
+int switching_time = 25;
+// bien dem thoi gian hien thi cua 1 led 7 doan
+int counter_led_7_seg = 25;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){\
  8000758:	b580      	push	{r7, lr}
@@ -1079,10 +1079,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){\
  80007c8:	46bd      	mov	sp, r7
  80007ca:	bd80      	pop	{r7, pc}
  80007cc:	40010800 	.word	0x40010800
- 80007d0:	20000010 	.word	0x20000010
- 80007d4:	20000014 	.word	0x20000014
- 80007d8:	20000018 	.word	0x20000018
- 80007dc:	2000001c 	.word	0x2000001c
+ 80007d0:	20000014 	.word	0x20000014
+ 80007d4:	20000010 	.word	0x20000010
+ 80007d8:	2000001c 	.word	0x2000001c
+ 80007dc:	20000018 	.word	0x20000018
  80007e0:	20000048 	.word	0x20000048
 
 080007e4 <Error_Handler>:

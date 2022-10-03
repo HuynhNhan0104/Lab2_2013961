@@ -2495,18 +2495,18 @@ LOAD d:/stm32cubeide/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.id
  .data.led_buffer
                 0x0000000020000000       0x10 ./Core/Src/main.o
                 0x0000000020000000                led_buffer
- .data.counter_2_LED_RED
-                0x0000000020000010        0x4 ./Core/Src/main.o
-                0x0000000020000010                counter_2_LED_RED
  .data.time_blinking_2_led_red
+                0x0000000020000010        0x4 ./Core/Src/main.o
+                0x0000000020000010                time_blinking_2_led_red
+ .data.counter_2_LED_RED
                 0x0000000020000014        0x4 ./Core/Src/main.o
-                0x0000000020000014                time_blinking_2_led_red
- .data.counter_led_7_seg
-                0x0000000020000018        0x4 ./Core/Src/main.o
-                0x0000000020000018                counter_led_7_seg
+                0x0000000020000014                counter_2_LED_RED
  .data.switching_time
+                0x0000000020000018        0x4 ./Core/Src/main.o
+                0x0000000020000018                switching_time
+ .data.counter_led_7_seg
                 0x000000002000001c        0x4 ./Core/Src/main.o
-                0x000000002000001c                switching_time
+                0x000000002000001c                counter_led_7_seg
  .data.SystemCoreClock
                 0x0000000020000020        0x4 ./Core/Src/system_stm32f1xx.o
                 0x0000000020000020                SystemCoreClock
