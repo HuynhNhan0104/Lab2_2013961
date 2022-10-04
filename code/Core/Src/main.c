@@ -57,9 +57,74 @@ static void MX_TIM2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+int TIMER_CYCLE =10;
 void display7SEG(int num);
 void update7SEG ( int index );
 void updateClockBuffer(int hour, int minute);
+
+//bien diem thoi gian cua led do nhap nhay moi chu ki cua timer
+int counter_led_red = 1;
+int timer_led_red_flag = 0;
+void setTimer_LED_RED(int duration){
+	counter_led_red = duration/TIMER_CYCLE;
+	timer_led_red_flag = 0;
+}
+
+// bien diem thoi gian sang 2 den led
+int counter_2_LED_RED = 100;
+int timer_2_LED_RED_flag = 0;
+
+void setTimer_2_LED_RED(int duration){
+	counter_2_LED_RED = duration/TIMER_CYCLE;
+	timer_2_LED_RED_flag = 0;
+}
+
+
+// bien dem thoi gian hien thi cua 1 led 7 doan
+const int MAX_LED = 4;
+int index_led = 0;
+int led_buffer [4] = {2, 3, 5, 6};
+
+int counter_led_7_seg = 10;
+int timer_led_7_seg_flag = 0;
+void setTimer_led_7_seg(int duration){
+	counter_led_7_seg = duration/TIMER_CYCLE;
+	timer_led_7_seg_flag = 0;
+}
+
+// bien dem thoi gian  cua dong ho so
+int counter_clock= 100;
+int timer_clock_flag = 0;
+void setTimer_clock(int duration){
+	counter_clock = duration/TIMER_CYCLE;
+	timer_clock_flag = 0;
+}
+
+
+
+void timer_run(){
+	if(counter_2_LED_RED > 0){
+		counter_2_LED_RED--;
+		if(counter_2_LED_RED <= 0) timer_2_LED_RED_flag = 1;
+	}
+
+
+	if(counter_led_7_seg > 0){
+			counter_led_7_seg--;
+			if(counter_led_7_seg <= 0) timer_led_7_seg_flag = 1;
+	}
+
+	if(counter_led_red > 0){
+		counter_led_red--;
+		if(counter_led_red <=0) timer_led_red_flag = 1;
+	}
+
+	if(counter_clock > 0){
+		counter_clock--;
+		if(counter_clock <= 0) timer_clock_flag = 1;
+	}
+}
+
 
 /* USER CODE END 0 */
 
@@ -97,29 +162,60 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+// thoi gian khoi tao gio : phut : giay cua he thong
 int hour = 7, minute = 30, second = 1;
+
+//thoi gian hien thị cua 1 den led 7 doan
+int switching_time = 100;
+//thoi gian sang cua 2 den led
+int time_blinking_2_led_red = 100;
+
+
 
   while (1)
   {
-	  second ++;
-	  if ( second >= 60) {
-		  second = 0;
-		  minute ++;
-	  }
-	  if( minute >= 60) {
-		  minute = 0;
-		  hour ++;
-	  }
-	  if( hour >=24){
-		  hour = 0;
+
+	  //hien thuc led do sang moi chu ki cua timer
+	  if(timer_led_red_flag == 1){
+		  setTimer_LED_RED(10);
+		  HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
 	  }
 
-	  updateClockBuffer (hour, minute);
+	  //hien thuc 2 LED do nhap nhay moi 1 giay
+	  if(timer_2_LED_RED_flag == 1){
+		  setTimer_2_LED_RED(time_blinking_2_led_red);
+		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+	  }
+
+	  //hien thuc 4 led7 doan lan luot sang
+	  if(timer_led_7_seg_flag == 1){
+		  setTimer_led_7_seg(switching_time);
+			if(index_led >= MAX_LED) index_led = 0;
+				update7SEG(index_led++);
+	  }
+
+	  if(timer_clock_flag == 1){
+		  setTimer_clock(1000);
+		  second ++;
+		  if ( second >= 60) {
+			  second = 0;
+			  minute ++;
+		  }
+		  if( minute >= 60) {
+			  minute = 0;
+			  hour ++;
+		  }
+		  if( hour >=24){
+			  hour = 0;
+		  }
+		  updateClockBuffer (hour, minute);
+
+	  }
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_Delay (1000) ;
   }
   /* USER CODE END 3 */
 }
@@ -343,9 +439,7 @@ void display7SEG(int num){
   }
 
 
-const int MAX_LED = 4;
-int index_led = 0;
-int led_buffer [4] = {2, 3, 5, 6};
+
 void update7SEG ( int index ){
 	switch ( index ){
 	case 0:
@@ -417,36 +511,14 @@ void updateClockBuffer(int hour, int minute){
 }
 
 
-//thoi gian sang cua 2 den led
-int time_blinking_2_led_red = 100;
-// bien diem thoi gian sang 2 den led
-int counter_2_LED_RED = 100;
 
-//thoi gian hien thị cua 1 den led 7 doan
-int switching_time = 10;
-// bien dem thoi gian hien thi cua 1 led 7 doan
-int counter_led_7_seg = 10;
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){\
-	//den led nhap nhay moi 10ms
-	HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
-	//hien thuc viec nhap nhay moi giay cua 2 den led
-	counter_2_LED_RED--;
-	if(counter_2_LED_RED <= 0){
-		counter_2_LED_RED = time_blinking_2_led_red;
-		//TODO
-		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-	}
 
-	// hien thuc viec hien thi den led 7 doan
-	counter_led_7_seg--;
-	if( counter_led_7_seg <= 0){
-		counter_led_7_seg = switching_time;
-		//TODO
-		// index led vuot qua 4 thi se duoc gan lai = 0
-		if(index_led >= MAX_LED) index_led = 0;
-		update7SEG(index_led++);
-	}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+
+
+	timer_run();
 
 
 }
