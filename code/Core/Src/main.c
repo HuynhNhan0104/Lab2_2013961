@@ -63,19 +63,20 @@ static void MX_TIM2_Init(void);
 
 int TIMER_CYCLE =10;
 void display7SEG(int num);
-void update7SEG ( int index );
-void updateClockBuffer(int hour, int minute);
-void updateLEDMatrix (int index );
-void updateRow(uint8_t buffer);
-void updateCol(int index );
 
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer [4] = {0, 0, 0, 0};
+void update7SEG ( int index );
+void updateClockBuffer(int hour, int minute);
 
 const int MAX_LED_MATRIX = 8;
 int index_led_matrix = 0;
 uint8_t matrix_buffer [8] = {0xFF,0xC0,0x80,0x33,0x33,0x80,0xC0,0xFF};
+void updateLEDMatrix (int index );
+void updateRow(uint8_t buffer);
+void updateCol(int index );
+void shift_buffer();
 /* USER CODE END 0 */
 
 /**
@@ -126,8 +127,13 @@ setTimer_2_LED_RED(time_blinking_2_led_red);
 int hour = 7, minute = 30, second = 1;
 setTimer_clock(1000);
 
+//set timer cua matrix led
+int time_switch_colum = 100;
 setTimer_matrix_led(100);
 
+//set timer cua bo dich buffer cua matri lex
+int time_animation = 2000;
+setTimer_shift_buffer(2000);
   while (1)
   {
   //hien thuc 2 LED do nhap nhay moi 1 giay
@@ -163,12 +169,18 @@ setTimer_matrix_led(100);
 
 
 	  if(timer_matrix_led_flag == 1){
-		  setTimer_matrix_led(500);
+		  setTimer_matrix_led(time_switch_colum);
 		  if(index_led_matrix >= 8) index_led_matrix = 0;
 		  updateLEDMatrix(index_led_matrix++);
 
 	  }
 
+
+	  if(timer_shift_buffer_flag ==1){
+		  setTimer_shift_buffer(time_animation);
+		  shift_buffer();
+
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -526,7 +538,6 @@ void updateCol(int index ){
 	HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
 	HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
 	HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
-
 	switch(index){
 	case 0:
 		HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, RESET);
@@ -563,7 +574,6 @@ void updateCol(int index ){
 }
 // ham se nhan gia tri cua buffer 8 bit va se trich tung bit de cho ra cac output tuong ung
 void updateRow(uint8_t buffer){
-
 	uint8_t pin[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	pin[7] = (buffer & 0x01 );
 	pin[6] = (buffer & 0x02 ) >> 1;
@@ -584,7 +594,17 @@ void updateRow(uint8_t buffer){
 	HAL_GPIO_WritePin(ROW7_GPIO_Port, ROW7_Pin, pin[7]);
 }
 
-
+void shift_buffer(){
+	uint8_t temp = matrix_buffer[7];
+	matrix_buffer[7] = matrix_buffer[6];
+	matrix_buffer[6] = matrix_buffer[5];
+	matrix_buffer[5] = matrix_buffer[4];
+	matrix_buffer[4] = matrix_buffer[3];
+	matrix_buffer[3] = matrix_buffer[2];
+	matrix_buffer[2] = matrix_buffer[1];
+	matrix_buffer[1] = matrix_buffer[0];
+	matrix_buffer[0] = temp;
+}
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
