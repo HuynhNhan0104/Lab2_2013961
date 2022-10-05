@@ -490,42 +490,8 @@ void updateClockBuffer(int hour, int minute){
 }
 
 void updateLEDMatrix (int index ){
-	switch(index){
-	case 0:
-		updateCol(index);
-		updateRow(matrix_buffer[0]);
-		break;
-	case 1:
-		updateCol(index);
-		updateRow(matrix_buffer[1]);
-			break;
-	case 2:
-		updateCol(index);
-		updateRow(matrix_buffer[2]);
-			break;
-	case 3:
-			updateCol(index);
-			updateRow(matrix_buffer[3]);
-			break;
-	case 4:
-		updateCol(index);
-		updateRow(matrix_buffer[4]);
-			break;
-	case 5:
-		updateCol(index);
-		updateRow(matrix_buffer[5]);
-			break;
-	case 6:
-		updateCol(index);
-		updateRow(matrix_buffer[6]);
-			break;
-	case 7:
-		updateCol(index);
-		updateRow(matrix_buffer[7]);
-			break;
-	default:
-		break;
-	}
+	updateCol(index);
+	updateRow(matrix_buffer[index]);
 }
 
 
