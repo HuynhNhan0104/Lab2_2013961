@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "software_timer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,6 +50,10 @@ TIM_HandleTypeDef htim2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
+
+
+
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -61,71 +65,17 @@ int TIMER_CYCLE =10;
 void display7SEG(int num);
 void update7SEG ( int index );
 void updateClockBuffer(int hour, int minute);
+void updateLEDMatrix (int index );
+void updateRow(uint8_t buffer);
+void updateCol(int index );
 
-//bien diem thoi gian cua led do nhap nhay moi chu ki cua timer
-int counter_led_red = 1;
-int timer_led_red_flag = 0;
-void setTimer_LED_RED(int duration){
-	counter_led_red = duration/TIMER_CYCLE;
-	timer_led_red_flag = 0;
-}
-
-// bien diem thoi gian sang 2 den led
-int counter_2_LED_RED = 100;
-int timer_2_LED_RED_flag = 0;
-
-void setTimer_2_LED_RED(int duration){
-	counter_2_LED_RED = duration/TIMER_CYCLE;
-	timer_2_LED_RED_flag = 0;
-}
-
-
-// bien dem thoi gian hien thi cua 1 led 7 doan
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer [4] = {2, 3, 5, 6};
+int led_buffer [4] = {0, 0, 0, 0};
 
-int counter_led_7_seg = 10;
-int timer_led_7_seg_flag = 0;
-void setTimer_led_7_seg(int duration){
-	counter_led_7_seg = duration/TIMER_CYCLE;
-	timer_led_7_seg_flag = 0;
-}
-
-// bien dem thoi gian  cua dong ho so
-int counter_clock= 100;
-int timer_clock_flag = 0;
-void setTimer_clock(int duration){
-	counter_clock = duration/TIMER_CYCLE;
-	timer_clock_flag = 0;
-}
-
-
-
-void timer_run(){
-	if(counter_2_LED_RED > 0){
-		counter_2_LED_RED--;
-		if(counter_2_LED_RED <= 0) timer_2_LED_RED_flag = 1;
-	}
-
-
-	if(counter_led_7_seg > 0){
-			counter_led_7_seg--;
-			if(counter_led_7_seg <= 0) timer_led_7_seg_flag = 1;
-	}
-
-	if(counter_led_red > 0){
-		counter_led_red--;
-		if(counter_led_red <=0) timer_led_red_flag = 1;
-	}
-
-	if(counter_clock > 0){
-		counter_clock--;
-		if(counter_clock <= 0) timer_clock_flag = 1;
-	}
-}
-
-
+const int MAX_LED_MATRIX = 8;
+int index_led_matrix = 0;
+uint8_t matrix_buffer [8] = {0xFF,0xC0,0x80,0x33,0x33,0x80,0xC0,0xFF};
 /* USER CODE END 0 */
 
 /**
@@ -149,6 +99,7 @@ int main(void)
 
   /* Configure the system clock */
   SystemClock_Config();
+
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
@@ -163,26 +114,23 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-// thoi gian khoi tao gio : phut : giay cua he thong
-int hour = 7, minute = 30, second = 1;
 
 //thoi gian hien thị cua 1 den led 7 doan
 int switching_time = 100;
+setTimer_led_7_seg(switching_time);
 //thoi gian sang cua 2 den led
-int time_blinking_2_led_red = 100;
+int time_blinking_2_led_red = 1000;
+setTimer_2_LED_RED(time_blinking_2_led_red);
 
+// thoi gian khoi tao gio : phut : giay cua he thong
+int hour = 7, minute = 30, second = 1;
+setTimer_clock(1000);
 
+setTimer_matrix_led(100);
 
   while (1)
   {
-
-	  //hien thuc led do sang moi chu ki cua timer
-	  if(timer_led_red_flag == 1){
-		  setTimer_LED_RED(10);
-		  HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
-	  }
-
-	  //hien thuc 2 LED do nhap nhay moi 1 giay
+  //hien thuc 2 LED do nhap nhay moi 1 giay
 	  if(timer_2_LED_RED_flag == 1){
 		  setTimer_2_LED_RED(time_blinking_2_led_red);
 		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
@@ -210,6 +158,14 @@ int time_blinking_2_led_red = 100;
 			  hour = 0;
 		  }
 		  updateClockBuffer (hour, minute);
+
+	  }
+
+
+	  if(timer_matrix_led_flag == 1){
+		  setTimer_matrix_led(500);
+		  if(index_led_matrix >= 8) index_led_matrix = 0;
+		  updateLEDMatrix(index_led_matrix++);
 
 	  }
 
@@ -314,26 +270,38 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, DOT_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
-                          |EN2_Pin|EN3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, ENM0_Pin|ENM1_Pin|DOT_Pin|LED_RED_Pin
+                          |EN0_Pin|EN1_Pin|EN2_Pin|EN3_Pin
+                          |ENM2_Pin|ENM3_Pin|ENM4_Pin|ENM5_Pin
+                          |ENM6_Pin|ENM7_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin|SEG3_Pin
-                          |SEG4_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin|ROW2_Pin
+                          |ROW3_Pin|ROW4_Pin|ROW5_Pin|ROW6_Pin
+                          |ROW7_Pin|SEG3_Pin|SEG4_Pin|SEG5_Pin
+                          |SEG6_Pin|ROW0_Pin|ROW1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : DOT_Pin LED_RED_Pin EN0_Pin EN1_Pin
-                           EN2_Pin EN3_Pin */
-  GPIO_InitStruct.Pin = DOT_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
-                          |EN2_Pin|EN3_Pin;
+  /*Configure GPIO pins : ENM0_Pin ENM1_Pin DOT_Pin LED_RED_Pin
+                           EN0_Pin EN1_Pin EN2_Pin EN3_Pin
+                           ENM2_Pin ENM3_Pin ENM4_Pin ENM5_Pin
+                           ENM6_Pin ENM7_Pin */
+  GPIO_InitStruct.Pin = ENM0_Pin|ENM1_Pin|DOT_Pin|LED_RED_Pin
+                          |EN0_Pin|EN1_Pin|EN2_Pin|EN3_Pin
+                          |ENM2_Pin|ENM3_Pin|ENM4_Pin|ENM5_Pin
+                          |ENM6_Pin|ENM7_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SEG0_Pin SEG1_Pin SEG2_Pin SEG3_Pin
-                           SEG4_Pin SEG5_Pin SEG6_Pin */
-  GPIO_InitStruct.Pin = SEG0_Pin|SEG1_Pin|SEG2_Pin|SEG3_Pin
-                          |SEG4_Pin|SEG5_Pin|SEG6_Pin;
+  /*Configure GPIO pins : SEG0_Pin SEG1_Pin SEG2_Pin ROW2_Pin
+                           ROW3_Pin ROW4_Pin ROW5_Pin ROW6_Pin
+                           ROW7_Pin SEG3_Pin SEG4_Pin SEG5_Pin
+                           SEG6_Pin ROW0_Pin ROW1_Pin */
+  GPIO_InitStruct.Pin = SEG0_Pin|SEG1_Pin|SEG2_Pin|ROW2_Pin
+                          |ROW3_Pin|ROW4_Pin|ROW5_Pin|ROW6_Pin
+                          |ROW7_Pin|SEG3_Pin|SEG4_Pin|SEG5_Pin
+                          |SEG6_Pin|ROW0_Pin|ROW1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -439,7 +407,6 @@ void display7SEG(int num){
   }
 
 
-
 void update7SEG ( int index ){
 	switch ( index ){
 	case 0:
@@ -510,17 +477,118 @@ void updateClockBuffer(int hour, int minute){
 
 }
 
+void updateLEDMatrix (int index ){
+	switch(index){
+	case 0:
+		updateCol(index);
+		updateRow(matrix_buffer[0]);
+		break;
+	case 1:
+		updateCol(index);
+		updateRow(matrix_buffer[1]);
+			break;
+	case 2:
+		updateCol(index);
+		updateRow(matrix_buffer[2]);
+			break;
+	case 3:
+			updateCol(index);
+			updateRow(matrix_buffer[3]);
+			break;
+	case 4:
+		updateCol(index);
+		updateRow(matrix_buffer[4]);
+			break;
+	case 5:
+		updateCol(index);
+		updateRow(matrix_buffer[5]);
+			break;
+	case 6:
+		updateCol(index);
+		updateRow(matrix_buffer[6]);
+			break;
+	case 7:
+		updateCol(index);
+		updateRow(matrix_buffer[7]);
+			break;
+	default:
+		break;
+	}
+}
 
 
+void updateCol(int index ){
+	HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
+	HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
+	HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
+	HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
+	HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
+	HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
+	HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
+	HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
+
+	switch(index){
+	case 0:
+		HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, RESET);
+		break;
+	case 1:
+		HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, RESET);
+		break;
+	case 2:
+		HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, RESET);
+		break;
+	case 3:
+		HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, RESET);
+		break;
+	case 4:
+		HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, RESET);
+		break;
+	case 5:
+		HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, RESET);
+		break;
+	case 6:
+		HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, RESET);
+		break;
+	case 7:
+		HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, RESET);
+		break;
+	default:
+		break;
+	}
+
+
+
+
+
+}
+// ham se nhan gia tri cua buffer 8 bit va se trich tung bit de cho ra cac output tuong ung
+void updateRow(uint8_t buffer){
+
+	uint8_t pin[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+	pin[7] = (buffer & 0x01 );
+	pin[6] = (buffer & 0x02 ) >> 1;
+	pin[5] = (buffer & 0x04 ) >> 2;
+	pin[4] = (buffer & 0x08 ) >> 3;
+	pin[3] = (buffer & 0x10 ) >> 4;
+	pin[2] = (buffer & 0x20 ) >> 5;
+	pin[1] = (buffer & 0x40 ) >> 6;
+	pin[0] = (buffer & 0x80 ) >> 7;
+
+	HAL_GPIO_WritePin(ROW0_GPIO_Port, ROW0_Pin, pin[0]);
+	HAL_GPIO_WritePin(ROW1_GPIO_Port, ROW1_Pin, pin[1]);
+	HAL_GPIO_WritePin(ROW2_GPIO_Port, ROW2_Pin, pin[2]);
+	HAL_GPIO_WritePin(ROW3_GPIO_Port, ROW3_Pin, pin[3]);
+	HAL_GPIO_WritePin(ROW4_GPIO_Port, ROW4_Pin, pin[4]);
+	HAL_GPIO_WritePin(ROW6_GPIO_Port, ROW5_Pin, pin[5]);
+	HAL_GPIO_WritePin(ROW6_GPIO_Port, ROW6_Pin, pin[6]);
+	HAL_GPIO_WritePin(ROW7_GPIO_Port, ROW7_Pin, pin[7]);
+}
 
 
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-
-
+	HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
 	timer_run();
-
-
 }
 /* USER CODE END 4 */
 
