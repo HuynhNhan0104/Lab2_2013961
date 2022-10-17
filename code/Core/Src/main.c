@@ -333,38 +333,45 @@ enum state{EN0,EN1,EN2,EN3};
 // current_state = EN0 tuc EN0 dang bat, state = EN1 tuc EN1 dang bat...vv
 enum state current_state = EN0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+
+
 	counter_7_led--;
 	counter_2_led--;
-	HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
 	if( counter_7_led <= 0){
 		counter_7_led = switching_time;
 		//TODO
 		// chung ta se cho cac led 7 doan hien thi theo thu tu 0,1,2,3,0,....
-		//de lam vay thi ta se tat tin hieu dieu khien o trang thai truoc va bat trang thai dieu khien o trang thai hien tai
+	    // ta se co mot may trang thai voi 4 trang thai, tuong ung voi current_state = ENi(i = 0,1,2,3) thi ENi = 0;
 		switch(current_state){
 		case EN0:
-			//disable EN3 tuc trang thai truoc do hien thị led 7 doan
-			HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
-			//enable EN0 tuc trang thai hien tai hien thị led 7 doan
 			HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,RESET);
+			HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
+			HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
+			HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
 			display7SEG(1);
 			current_state = EN1;
 			break;
 		case EN1:
 			HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
 			HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,RESET);
+			HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
+			HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
 			display7SEG(2);
 			current_state = EN2;
 			break;
 		case EN2:
+			HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
 			HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
 			HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,RESET);
+			HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);
 			display7SEG(3);
 			current_state = EN3;
 			break;
 		case EN3:
-			HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,SET);
-			HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,RESET);
+			HAL_GPIO_WritePin(EN0_GPIO_Port,EN0_Pin,SET);
+			HAL_GPIO_WritePin(EN1_GPIO_Port,EN1_Pin,SET);
+			HAL_GPIO_WritePin(EN2_GPIO_Port,EN2_Pin,RESET);
+			HAL_GPIO_WritePin(EN3_GPIO_Port,EN3_Pin,SET);;
 			display7SEG(0);
 			current_state = EN0;
 			break;
@@ -376,6 +383,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if(counter_2_led <= 0){
 		counter_2_led = time_blinking_2_led;
 		//TODO
+		HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
 		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 
 	}
