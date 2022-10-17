@@ -382,13 +382,12 @@ int switching_time = 25;
 int counter_led_7_seg = 25;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){\
-	//den led nhap nhay moi 10ms
-	HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
 	//hien thuc viec nhap nhay moi giay cua 2 den led
 	counter_2_LED_RED--;
 	if(counter_2_LED_RED <= 0){
 		counter_2_LED_RED = time_blinking_2_led_red;
 		//TODO
+		HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
 		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 	}
 

@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  0001625a  00000000  00000000  0002aa40  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00009436  00000000  00000000  00040c9a  2**0
+ 17 .debug_line   00009434  00000000  00000000  00040c9a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00081d3c  00000000  00000000  0004a0d0  2**0
+ 18 .debug_str    00081d3c  00000000  00000000  0004a0ce  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000cbe0c  2**0
+ 19 .comment      00000053  00000000  00000000  000cbe0a  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00002618  00000000  00000000  000cbe60  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -1005,32 +1005,31 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){\
  800075a:	b082      	sub	sp, #8
  800075c:	af00      	add	r7, sp, #0
  800075e:	6078      	str	r0, [r7, #4]
-	//den led nhap nhay moi 10ms
-	HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
- 8000760:	2120      	movs	r1, #32
- 8000762:	481a      	ldr	r0, [pc, #104]	; (80007cc <HAL_TIM_PeriodElapsedCallback+0x74>)
- 8000764:	f000 fbfa 	bl	8000f5c <HAL_GPIO_TogglePin>
 	//hien thuc viec nhap nhay moi giay cua 2 den led
 	counter_2_LED_RED--;
- 8000768:	4b19      	ldr	r3, [pc, #100]	; (80007d0 <HAL_TIM_PeriodElapsedCallback+0x78>)
- 800076a:	681b      	ldr	r3, [r3, #0]
- 800076c:	3b01      	subs	r3, #1
- 800076e:	4a18      	ldr	r2, [pc, #96]	; (80007d0 <HAL_TIM_PeriodElapsedCallback+0x78>)
- 8000770:	6013      	str	r3, [r2, #0]
+ 8000760:	4b1a      	ldr	r3, [pc, #104]	; (80007cc <HAL_TIM_PeriodElapsedCallback+0x74>)
+ 8000762:	681b      	ldr	r3, [r3, #0]
+ 8000764:	3b01      	subs	r3, #1
+ 8000766:	4a19      	ldr	r2, [pc, #100]	; (80007cc <HAL_TIM_PeriodElapsedCallback+0x74>)
+ 8000768:	6013      	str	r3, [r2, #0]
 	if(counter_2_LED_RED <= 0){
+ 800076a:	4b18      	ldr	r3, [pc, #96]	; (80007cc <HAL_TIM_PeriodElapsedCallback+0x74>)
+ 800076c:	681b      	ldr	r3, [r3, #0]
+ 800076e:	2b00      	cmp	r3, #0
+ 8000770:	dc0b      	bgt.n	800078a <HAL_TIM_PeriodElapsedCallback+0x32>
+		counter_2_LED_RED = time_blinking_2_led_red;
  8000772:	4b17      	ldr	r3, [pc, #92]	; (80007d0 <HAL_TIM_PeriodElapsedCallback+0x78>)
  8000774:	681b      	ldr	r3, [r3, #0]
- 8000776:	2b00      	cmp	r3, #0
- 8000778:	dc07      	bgt.n	800078a <HAL_TIM_PeriodElapsedCallback+0x32>
-		counter_2_LED_RED = time_blinking_2_led_red;
- 800077a:	4b16      	ldr	r3, [pc, #88]	; (80007d4 <HAL_TIM_PeriodElapsedCallback+0x7c>)
- 800077c:	681b      	ldr	r3, [r3, #0]
- 800077e:	4a14      	ldr	r2, [pc, #80]	; (80007d0 <HAL_TIM_PeriodElapsedCallback+0x78>)
- 8000780:	6013      	str	r3, [r2, #0]
+ 8000776:	4a15      	ldr	r2, [pc, #84]	; (80007cc <HAL_TIM_PeriodElapsedCallback+0x74>)
+ 8000778:	6013      	str	r3, [r2, #0]
 		//TODO
+		HAL_GPIO_TogglePin ( LED_RED_GPIO_Port , LED_RED_Pin );
+ 800077a:	2120      	movs	r1, #32
+ 800077c:	4815      	ldr	r0, [pc, #84]	; (80007d4 <HAL_TIM_PeriodElapsedCallback+0x7c>)
+ 800077e:	f000 fbed 	bl	8000f5c <HAL_GPIO_TogglePin>
 		HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
  8000782:	2110      	movs	r1, #16
- 8000784:	4811      	ldr	r0, [pc, #68]	; (80007cc <HAL_TIM_PeriodElapsedCallback+0x74>)
+ 8000784:	4813      	ldr	r0, [pc, #76]	; (80007d4 <HAL_TIM_PeriodElapsedCallback+0x7c>)
  8000786:	f000 fbe9 	bl	8000f5c <HAL_GPIO_TogglePin>
 	}
 
@@ -1078,9 +1077,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){\
  80007c6:	3708      	adds	r7, #8
  80007c8:	46bd      	mov	sp, r7
  80007ca:	bd80      	pop	{r7, pc}
- 80007cc:	40010800 	.word	0x40010800
- 80007d0:	20000014 	.word	0x20000014
- 80007d4:	20000010 	.word	0x20000010
+ 80007cc:	20000014 	.word	0x20000014
+ 80007d0:	20000010 	.word	0x20000010
+ 80007d4:	40010800 	.word	0x40010800
  80007d8:	2000001c 	.word	0x2000001c
  80007dc:	20000018 	.word	0x20000018
  80007e0:	20000048 	.word	0x20000048
