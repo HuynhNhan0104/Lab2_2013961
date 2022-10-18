@@ -478,79 +478,94 @@ void updateClockBuffer(int hour, int minute){
 }
 
 void updateLEDMatrix (int index ){
-	switch(index){
-	case 0:
-		updateCol(index);
-		updateRow(matrix_buffer[0]);
-		break;
-	case 1:
-		updateCol(index);
-		updateRow(matrix_buffer[1]);
-			break;
-	case 2:
-		updateCol(index);
-		updateRow(matrix_buffer[2]);
-			break;
-	case 3:
-			updateCol(index);
-			updateRow(matrix_buffer[3]);
-			break;
-	case 4:
-		updateCol(index);
-		updateRow(matrix_buffer[4]);
-			break;
-	case 5:
-		updateCol(index);
-		updateRow(matrix_buffer[5]);
-			break;
-	case 6:
-		updateCol(index);
-		updateRow(matrix_buffer[6]);
-			break;
-	case 7:
-		updateCol(index);
-		updateRow(matrix_buffer[7]);
-			break;
-	default:
-		break;
-	}
+	updateCol(index);
+	updateRow(matrix_buffer[index]);
 }
 
-
+// updateCol se tao tin hieu ENMi = 0 voi index đuoc truyen vao
+//vi du updateCol(0) se lam cho duy nhat tin hieu ENM0 = RESET
 void updateCol(int index ){
-	HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
-	HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
-	HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
-	HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
-	HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
-	HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
-	HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
-	HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
-
 	switch(index){
 	case 0:
-		HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, RESET);
+		HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,RESET);
+		HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
+		HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
+		HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
+		HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
+		HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
+		HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
+		HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
+
 		break;
 	case 1:
-		HAL_GPIO_WritePin(ENM1_GPIO_Port, ENM1_Pin, RESET);
+		HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
+		HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,RESET);
+		HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
+		HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
+		HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
+		HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
+		HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
+		HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
 		break;
 	case 2:
-		HAL_GPIO_WritePin(ENM2_GPIO_Port, ENM2_Pin, RESET);
+		HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
+		HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
+		HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,RESET);
+		HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
+		HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
+		HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
+		HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
+		HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
 		break;
 	case 3:
-		HAL_GPIO_WritePin(ENM3_GPIO_Port, ENM3_Pin, RESET);
+		HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
+		HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
+		HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
+		HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,RESET);
+		HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
+		HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
+		HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
+		HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
 		break;
 	case 4:
-		HAL_GPIO_WritePin(ENM4_GPIO_Port, ENM4_Pin, RESET);
+		HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
+		HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
+		HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
+		HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
+		HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,RESET);
+		HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
+		HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
+		HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
 		break;
 	case 5:
-		HAL_GPIO_WritePin(ENM5_GPIO_Port, ENM5_Pin, RESET);
+		HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
+		HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
+		HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
+		HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
+		HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
+		HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,RESET);
+		HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
+		HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
 		break;
 	case 6:
-		HAL_GPIO_WritePin(ENM6_GPIO_Port, ENM6_Pin, RESET);
+		HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
+		HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
+		HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
+		HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
+		HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
+		HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
+		HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,RESET);
+		HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,SET);
 		break;
 	case 7:
-		HAL_GPIO_WritePin(ENM7_GPIO_Port, ENM7_Pin, RESET);
+		HAL_GPIO_WritePin(ENM0_GPIO_Port,ENM0_Pin,SET);
+		HAL_GPIO_WritePin(ENM1_GPIO_Port,ENM1_Pin,SET);
+		HAL_GPIO_WritePin(ENM2_GPIO_Port,ENM2_Pin,SET);
+		HAL_GPIO_WritePin(ENM3_GPIO_Port,ENM3_Pin,SET);
+		HAL_GPIO_WritePin(ENM4_GPIO_Port,ENM4_Pin,SET);
+		HAL_GPIO_WritePin(ENM5_GPIO_Port,ENM5_Pin,SET);
+		HAL_GPIO_WritePin(ENM6_GPIO_Port,ENM6_Pin,SET);
+		HAL_GPIO_WritePin(ENM7_GPIO_Port,ENM7_Pin,RESET);
 		break;
 	default:
 		break;
@@ -561,9 +576,13 @@ void updateCol(int index ){
 
 
 }
-// ham se nhan gia tri cua buffer 8 bit va se trich tung bit de cho ra cac output tuong ung
+// ham updateRow se nhan gia tri cua buffer 8 bit voi index tuong ung trong matrix buffer va se tach tung bit cua buffer de cho ra cac output tuong ung
 void updateRow(uint8_t buffer){
-
+	// o day buffer co dang chuoi 8 bit [0:7]
+	//de co the lay duoc tung bit cua buffer ta se dung cac phep and voi cac so phu hop
+	// vi du de lay duoc bit thu 6 cua buffer 0010_00_1_1 thi ta and buffer cho  0x02
+	// 0010_00_1_1 & 0000_00_1_0 = 0000_00_1_0
+	// sau do ta dich phai de dua ket qua vua thu duoc thanh 0000_000X tuong duong với X = 0 or 1 se la tin hieu cua ROW
 	uint8_t pin[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	pin[7] = (buffer & 0x01 );
 	pin[6] = (buffer & 0x02 ) >> 1;
@@ -573,7 +592,7 @@ void updateRow(uint8_t buffer){
 	pin[2] = (buffer & 0x20 ) >> 5;
 	pin[1] = (buffer & 0x40 ) >> 6;
 	pin[0] = (buffer & 0x80 ) >> 7;
-
+	//Dieu chinh tin hieu cua Row
 	HAL_GPIO_WritePin(ROW0_GPIO_Port, ROW0_Pin, pin[0]);
 	HAL_GPIO_WritePin(ROW1_GPIO_Port, ROW1_Pin, pin[1]);
 	HAL_GPIO_WritePin(ROW2_GPIO_Port, ROW2_Pin, pin[2]);
