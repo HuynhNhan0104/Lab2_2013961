@@ -43,11 +43,11 @@ void setTimer_matrix_led(int duration){
 }
 
 // shift buffer matrix led red 8x8
-int counter_shift_buffer = 1000;
-int timer_shift_buffer_flag= 0;
-void setTimer_shift_buffer(int duration){
-	counter_shift_buffer = duration/TIMER_CYCLE;
-	timer_shift_buffer_flag= 0;
+int counter_shift_left_buffer = 1000;
+int timer_shift_left_buffer_flag= 0;
+void setTimer_shift_left_buffer(int duration){
+	counter_shift_left_buffer = duration/TIMER_CYCLE;
+	timer_shift_left_buffer_flag= 0;
 }
 //Timer_run
 
@@ -79,9 +79,9 @@ void timer_run(){
 
 
 	//shift buffer matrix red led 8x8
-	if(counter_shift_buffer > 0){
-		counter_shift_buffer --;
-		if(counter_shift_buffer <= 0) timer_shift_buffer_flag = 1;
+	if(counter_shift_left_buffer > 0){
+		counter_shift_left_buffer --;
+		if(counter_shift_left_buffer <= 0) timer_shift_left_buffer_flag = 1;
 	}
 
 

@@ -36,9 +36,9 @@ extern int timer_matrix_led_flag;
 void setTimer_matrix_led(int duration);
 
 //timer de thuc hien dich buffer matrix led
-extern int counter_shift_buffer;
-extern int timer_shift_buffer_flag;
-void setTimer_shift_buffer(int duration);
+extern int counter_shift_left_buffer;
+extern int timer_shift_left_buffer_flag;
+void setTimer_shift_left_buffer(int duration);
 
 //timer run
 void  timer_run ();
